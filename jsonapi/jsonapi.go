@@ -160,6 +160,7 @@ func DeleteEmail(db *sql.DB) http.Handler {
 }
 
 // bind = ip address that the server is running on
+// ip will default to localhost if not provided (http://127.0.0.1:8080)
 func Serve(db *sql.DB, bind string) {
 	http.Handle("/email/create", CreateEmail(db))
 	http.Handle("/email/get", GetEmail(db))
