@@ -79,7 +79,7 @@ func GetEmail(db *sql.DB, email string) (*EmailEntry, error) {
 	rows, err := db.Query(`
 		SELECT id, email, confirmed_at, opt_out
 		FROM emails
-		WHERE email = ?`, email)
+		WHERE email=?`, email)
 
 	if err != nil {
 		log.Println(err)
@@ -105,7 +105,7 @@ func UpdateEmail(db *sql.DB, entry EmailEntry) error {
 		emails(email, confirmed_at, opt_out)
 		VALUES(?, ?, ?)
 		ON CONFLICT(email) DO UPDATE SET
-			confirmed_at=?
+			confirmed_at=?,
 			opt_out=?
 	`, entry.Email, t, entry.OptOut, t, entry.OptOut)
 
@@ -122,7 +122,7 @@ func UpdateEmail(db *sql.DB, entry EmailEntry) error {
 // to true
 func DeleteEmail(db *sql.DB, email string) error {
 	_, err := db.Exec(`
-		UPDATE email
+		UPDATE emails
 		SET opt_out=true
 		WHERE email=?`, email)
 
@@ -130,7 +130,6 @@ func DeleteEmail(db *sql.DB, email string) error {
 		log.Println(err)
 		return err
 	}
-
 	return nil
 }
 
